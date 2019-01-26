@@ -1,7 +1,8 @@
 import React from 'react'
 import { View, Image, StyleSheet } from 'react-native'
-import { ATText, ATTouchable } from 'react-native-atlas'
-import { Images } from '../Resources'
+import { ATText, ATTouchable, ATRowView } from 'react-native-atlas'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { Images, Iconfont } from '../Resources'
 import { AppStyles, Colors } from '../Theme'
 
 const Text = ({ children, ...props }) => (
@@ -20,9 +21,25 @@ class Home extends React.Component {
           <Text style={Styles.mt20}>邀请您</Text>
           <Text>体验我们的组件库</Text>
           <ATTouchable style={Styles.link} onPress={() => {}}>
-            <Text weight="bold" size={18}>
-              react-native-atlas
-            </Text>
+            <View style={AppStyles.boxCenter}>
+              <Text weight="bold" size={18}>
+                react-native-atlas
+              </Text>
+              <ATRowView style={{ marginTop: 10 }}>
+                <Icon
+                  name="github"
+                  size={30}
+                  color="#333"
+                  style={{ marginRight: 5 }}
+                />
+                <Iconfont
+                  name="click"
+                  size={32}
+                  color={Colors.danger}
+                  style={{ marginLeft: 5 }}
+                />
+              </ATRowView>
+            </View>
           </ATTouchable>
         </View>
       </View>

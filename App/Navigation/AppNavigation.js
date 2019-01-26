@@ -1,40 +1,55 @@
-import React from "react";
-import { View, Text, Easing, Animated } from "react-native";
+import React from 'react'
+import { Text, Easing, Animated } from 'react-native'
 import {
   createStackNavigator,
   createBottomTabNavigator,
   createAppContainer
-} from "react-navigation";
+} from 'react-navigation'
 import { TabPages, AppPages } from './NavPages'
-import Colors from "../Theme/Colors";
+import Colors from '../Theme/Colors'
+import { Iconfont } from '../Resources'
 
 const TabNavigatorConfig = {
   defaultNavigationOptions: ({ navigation }) => ({
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state
+      const iconConf = {
+        Home: 'atlas',
+        Components: 'components',
+        About: 'mine'
+      }
+      return (
+        <Iconfont
+          name={iconConf[routeName]}
+          color={focused ? tintColor : '#777'}
+          size={30}
+        />
+      )
+    },
     tabBarLabel: ({ focused, tintColor }) => {
-      const { routeName } = navigation.state;
+      const { routeName } = navigation.state
       const labelConf = {
-        Home: "主页",
-        Components: "组件库",
-        About: "关于"
-      };
+        Home: '主页',
+        Components: '组件库',
+        About: '关于'
+      }
       return (
         <Text
           style={{
-            color: tintColor,
-            fontSize: 12,
+            color: focused ? tintColor : '#777',
+            fontSize: 10,
             marginBottom: 2,
-            textAlign: "center",
-            fontWeight: "200"
+            textAlign: 'center',
+            fontWeight: '200'
           }}
         >
           {labelConf[routeName]}
         </Text>
-      );
+      )
     }
   }),
   tabBarOptions: {
     activeTintColor: Colors.primary,
-    inactiveTintColor: "#333",
     style: {
       backgroundColor: Colors.tabBackground,
       borderTopColor: Colors.borderLight
@@ -43,10 +58,10 @@ const TabNavigatorConfig = {
   animationEnabled: false,
   swipeEnabled: false,
   lazy: false
-};
+}
 
 const AppNavigatorConfig = {
-  headerMode: "none",
+  headerMode: 'none',
   transitionConfig: () => ({
     transitionSpec: {
       duration: 300,
@@ -54,28 +69,31 @@ const AppNavigatorConfig = {
       timing: Animated.timing
     },
     screenInterpolator: sceneProps => {
-      const { layout, position, scene } = sceneProps;
-      const { index } = scene;
-      const width = layout.initWidth;
+      const { layout, position, scene } = sceneProps
+      const { index } = scene
+      const width = layout.initWidth
       const translateX = position.interpolate({
         inputRange: [index - 1, index, index + 1],
         outputRange: [width, 0, -width]
-      });
+      })
       const opacity = position.interpolate({
         inputRange: [index - 1, index - 0.99, index],
         outputRange: [0, 1, 1]
-      });
+      })
 
-      return { opacity, transform: [{ translateX }] };
+      return { opacity, transform: [{ translateX }] }
     }
   })
-};
+}
 
-const AppNavigator = createStackNavigator({
-  Root: {
-    screen: createBottomTabNavigator(TabPages, TabNavigatorConfig)
+const AppNavigator = createStackNavigator(
+  {
+    Root: {
+      screen: createBottomTabNavigator(TabPages, TabNavigatorConfig)
+    },
+    ...AppPages
   },
-  ...AppPages
-}, AppNavigatorConfig);
+  AppNavigatorConfig
+)
 
-export default createAppContainer(AppNavigator);
+export default createAppContainer(AppNavigator)

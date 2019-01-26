@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import Colors from "./Colors";
+import { StyleSheet } from 'react-native'
+import Colors from './Colors'
 
 const AppStyles = StyleSheet.create({
   screen: {
@@ -11,9 +11,13 @@ const AppStyles = StyleSheet.create({
   },
   flexCenter: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  boxCenter: {
+    alignItems: 'center',
+    justifyContent: 'center'
   }
-});
+})
 
-export default AppStyles;
+export default AppStyles
