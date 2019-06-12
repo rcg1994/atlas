@@ -7,14 +7,14 @@ import { ATHeader } from 'react-native-atlas'
 
 class Header extends Component {
   render () {
-    const {title, style, onBack, ...eProps} = this.props
+    const { title, style, onBack, ...eProps } = this.props
     return <ATHeader
       title={title}
       fixStatusBar
       contentType='dark'
-    //   statusBar={Colors.statusBar}
-    //   style={[GlobalStyle.header, ifIphoneX({height: 80}, {}), style]}
-    //   titleStyle={ifIphoneX({lineHeight: 40, alignSelf: 'flex-end'}, {})}
+      //   statusBar={Colors.statusBar}
+      //   style={[ifIphoneX({ height: 80 }, {}), style]}
+      //   titleStyle={ifIphoneX({lineHeight: 40, alignSelf: 'flex-end'}, {})}
       onBack={() => {
         if (onBack) {
           onBack()
