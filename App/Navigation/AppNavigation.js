@@ -1,10 +1,16 @@
-import React from 'react'
-import { Text, Easing, Animated } from 'react-native'
+import React, { PureComponent } from 'react'
+import { Text, Easing, Animated, BackHandler, Platform } from 'react-native'
 import {
   createStackNavigator,
-  createBottomTabNavigator,
-  createAppContainer
+  createBottomTabNavigator
+  // createAppContainer
 } from 'react-navigation'
+import {
+  createReduxContainer,
+  createReactNavigationReduxMiddleware,
+  createNavigationReducer
+} from 'react-navigation-redux-helpers'
+import { connect } from 'react-redux'
 import { TabPages, AppPages } from './NavPages'
 import Colors from '../Theme/Colors'
 import { Iconfont } from '../Resources'
@@ -30,8 +36,8 @@ const TabNavigatorConfig = {
       const { routeName } = navigation.state
       const labelConf = {
         Home: '主页',
-        Components: '组件库',
-        About: '关于'
+        Components: '路由',
+        About: '状态'
       }
       return (
         <Text
@@ -96,4 +102,50 @@ const AppNavigator = createStackNavigator(
   AppNavigatorConfig
 )
 
-export default createAppContainer(AppNavigator)
+export const routerReducer = createNavigationReducer(AppNavigator)
+
+export const routerMiddleware = createReactNavigationReduxMiddleware(
+  state => state.router,
+  'root'
+)
+
+const App = createReduxContainer(AppNavigator, 'root')
+
+// react-redux 7.0.0 中不推荐使用装饰器
+// @connect(({ app, router }) => ({ app, router }))
+class ReduxNavigation extends PureComponent {
+  componentWillMount () {
+    if (Platform.OS === 'ios') return
+    BackHandler.addEventListener('hardwareBackPress', this.backHandle)
+  }
+
+  componentWillUnmount () {
+    if (Platform.OS === 'ios') return
+    BackHandler.removeEventListener('hardwareBackPress', this.backHandle)
+  }
+
+  backHandle = () => {
+    const { dispatch, router } = this.props
+    // change to whatever is your first screen, otherwise unpredictable results may occur
+    if (router.routes.length === 1 && (router.routes[0].routeName === 'Root')) {
+      return false
+    }
+    // if (shouldCloseApp(nav)) return false
+    dispatch({ type: 'Navigation/BACK' })
+    return true
+  }
+
+  render () {
+    // const { app, dispatch, router } = this.props
+    // if (app.loading) return <Loading />
+    const { dispatch, router } = this.props
+
+    return <App dispatch={dispatch} state={router} />
+  }
+}
+
+const mapStateToProps = ({ router }) => ({
+  router
+})
+
+export default connect(mapStateToProps)(ReduxNavigation)
