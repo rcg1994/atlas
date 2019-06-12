@@ -7,7 +7,6 @@ import { AppStyles } from '../Theme'
 
 class Components extends React.Component {
   componentWillMount () {
-    console.log(this.props.app)
   }
   render () {
     return (
